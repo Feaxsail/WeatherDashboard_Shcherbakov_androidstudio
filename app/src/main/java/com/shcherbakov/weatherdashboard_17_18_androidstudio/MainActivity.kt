@@ -18,7 +18,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton  // Шаг 11
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -91,7 +91,6 @@ fun WeatherDashboardScreen() {
             isLoading = weatherState.isLoading && weatherState.windSpeed == null
         )
 
-
         Spacer(modifier = Modifier.height(16.dp))
 
         WeatherCard(
@@ -100,6 +99,19 @@ fun WeatherDashboardScreen() {
             value = weatherState.weatherIndex?.let { "$it" } ?: "—",
             isLoading = weatherState.isLoading && weatherState.weatherIndex == null
         )
+
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "🔄 Автообновление каждые 10 сек",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.tertiary
+            )
+        }
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -110,7 +122,6 @@ fun WeatherDashboardScreen() {
             Text("🔄 Refresh Weather")
         }
 
-
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedButton(
@@ -118,7 +129,6 @@ fun WeatherDashboardScreen() {
         ) {
             Text("⚠️ Simulate Error")
         }
-
 
         if (weatherState.loadingProgress.isNotEmpty()) {
             Text(
@@ -128,7 +138,6 @@ fun WeatherDashboardScreen() {
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
-
 
         if (weatherState.error != null) {
             Text(

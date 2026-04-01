@@ -45,7 +45,7 @@ class WeatherViewModel : ViewModel() {
                     val windSpeed = windSpeedDeferred.await()
 
                     _weatherState.value = _weatherState.value.copy(loadingProgress = "Вычисление индекса...")
-                    val index = repository.calculateWeatherIndex()  // Шаг 12
+                    val index = repository.calculateWeatherIndex()
 
                     _weatherState.value = WeatherData(
                         temperature = temperature,
@@ -66,7 +66,6 @@ class WeatherViewModel : ViewModel() {
             }
         }
     }
-
 
     fun toggleErrorSimulation() {
         repository.toggleErrorSimulation()
