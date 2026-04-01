@@ -18,6 +18,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton  // Шаг 11
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -90,6 +91,16 @@ fun WeatherDashboardScreen() {
             isLoading = weatherState.isLoading && weatherState.windSpeed == null
         )
 
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        WeatherCard(
+            emoji = "📊",
+            title = "Weather Index",
+            value = weatherState.weatherIndex?.let { "$it" } ?: "—",
+            isLoading = weatherState.isLoading && weatherState.weatherIndex == null
+        )
+
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(
@@ -97,6 +108,15 @@ fun WeatherDashboardScreen() {
             enabled = !weatherState.isLoading
         ) {
             Text("🔄 Refresh Weather")
+        }
+
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedButton(
+            onClick = { viewModel.toggleErrorSimulation() }
+        ) {
+            Text("⚠️ Simulate Error")
         }
 
 
@@ -108,6 +128,7 @@ fun WeatherDashboardScreen() {
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
+
 
         if (weatherState.error != null) {
             Text(

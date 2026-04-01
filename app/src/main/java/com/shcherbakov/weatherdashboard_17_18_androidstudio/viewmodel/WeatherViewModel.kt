@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
+
 
 class WeatherViewModel : ViewModel() {
 
@@ -20,6 +23,7 @@ class WeatherViewModel : ViewModel() {
 
     init {
         loadWeatherData()
+        startAutoRefresh()
     }
 
     fun loadWeatherData() {
@@ -40,13 +44,17 @@ class WeatherViewModel : ViewModel() {
                     val humidity = humidityDeferred.await()
                     val windSpeed = windSpeedDeferred.await()
 
+                    _weatherState.value = _weatherState.value.copy(loadingProgress = "Вычисление индекса...")
+                    val index = repository.calculateWeatherIndex()  // Шаг 12
+
                     _weatherState.value = WeatherData(
                         temperature = temperature,
                         humidity = humidity,
                         windSpeed = windSpeed,
                         isLoading = false,
                         error = null,
-                        loadingProgress = "Загрузка завершена!"
+                        loadingProgress = "Загрузка завершена!",
+                        weatherIndex = index
                     )
                 }
             } catch (e: Exception) {
@@ -55,6 +63,25 @@ class WeatherViewModel : ViewModel() {
                     error = "Ошибка загрузки: ${e.message}",
                     loadingProgress = ""
                 )
+            }
+        }
+    }
+
+
+    fun toggleErrorSimulation() {
+        repository.toggleErrorSimulation()
+    }
+
+
+    private fun startAutoRefresh() {
+        viewModelScope.launch {
+            flow {
+                while (true) {
+                    delay(10000)
+                    emit(Unit)
+                }
+            }.collect {
+                loadWeatherData()
             }
         }
     }
