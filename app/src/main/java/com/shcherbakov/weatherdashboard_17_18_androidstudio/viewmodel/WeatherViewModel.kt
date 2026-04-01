@@ -24,11 +24,16 @@ class WeatherViewModel : ViewModel() {
 
     fun loadWeatherData() {
         viewModelScope.launch {
-            _weatherState.value = WeatherData(isLoading = true, error = null)
+            _weatherState.value = WeatherData(isLoading = true, error = null, loadingProgress = "Начало загрузки...")
             try {
                 coroutineScope {
+                    _weatherState.value = _weatherState.value.copy(loadingProgress = "Загружается температура...")
                     val temperatureDeferred = async { repository.fetchTemperature() }
+
+                    _weatherState.value = _weatherState.value.copy(loadingProgress = "Загружается влажность...")
                     val humidityDeferred = async { repository.fetchHumidity() }
+
+                    _weatherState.value = _weatherState.value.copy(loadingProgress = "Загружается ветер...")
                     val windSpeedDeferred = async { repository.fetchWindSpeed() }
 
                     val temperature = temperatureDeferred.await()
@@ -40,13 +45,15 @@ class WeatherViewModel : ViewModel() {
                         humidity = humidity,
                         windSpeed = windSpeed,
                         isLoading = false,
-                        error = null
+                        error = null,
+                        loadingProgress = "Загрузка завершена!"
                     )
                 }
             } catch (e: Exception) {
                 _weatherState.value = _weatherState.value.copy(
                     isLoading = false,
-                    error = e.message
+                    error = "Ошибка загрузки: ${e.message}",
+                    loadingProgress = ""
                 )
             }
         }

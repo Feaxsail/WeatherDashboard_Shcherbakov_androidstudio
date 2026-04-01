@@ -99,6 +99,16 @@ fun WeatherDashboardScreen() {
             Text("🔄 Refresh Weather")
         }
 
+
+        if (weatherState.loadingProgress.isNotEmpty()) {
+            Text(
+                text = weatherState.loadingProgress,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+        }
+
         if (weatherState.error != null) {
             Text(
                 text = "⚠️ ${weatherState.error}",
